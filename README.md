@@ -1,6 +1,6 @@
-# Tic Tac Toe
+# Tic-Tac-Toe
 
-This is a required project - Tic Tac Toe - for [The Odin Project](https://www.theodinproject.com/).
+This is a required project - Tic-Tac-Toe - for [The Odin Project](https://www.theodinproject.com/).
 
 ## Skills Required
 - HTML
