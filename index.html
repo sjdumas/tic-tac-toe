@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="./assets/css/style.css">
+        <title>TOP: Tic Tac Toe</title>
+    </head>
+    <body>
+        <main class="container">
+            <h1>Tic-Tac-Toe</h1>
+            <div class="game-container">
+                <div id="gameboard">
+                    <div class="cell"></div>
+                    <div class="cell"></div>
+                    <div class="cell"></div>
+                    <div class="cell"></div>
+                    <div class="cell"></div>
+                    <div class="cell"></div>
+                    <div class="cell"></div>
+                    <div class="cell"></div>
+                    <div class="cell"></div>
+                </div>
+                <div id="player-dashboard">
+                    <h2><span id="player-1-name"></span> <span class="score">0</span></h2>
+                    <h2>Tie <span class="score">0</span></h2>
+                    <h2><span id="player-2-name"></span> <span class="score">0</span></h2>
+                </div>
+                <div id="message-display"></div>
+                <div id="name-input-section" class="modal">
+                    <div class="modal-content">
+                        <h2>Enter Player Names</h2>
+                        <input id="player1-input" placeholder="Player 1">
+                        <input id="player2-input" placeholder="Player 2">
+                        <button id="start-game">Start Game</button>
+                    </div>
+                </div>
+                <button id="restart">Restart Game</button>
+            </div>
+        </main>
+        <script src="./assets/js/script.js"></script>
+    </body>
+</html>
