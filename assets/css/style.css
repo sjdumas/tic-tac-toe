@@ -1,15 +1,57 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
 :root {
 	--body-font: "Inter", sans-serif;
-	--body-bg-color: #fafafa;
+	--body-bg-color: inherit;
 	--simply-white: #ffffff;
 	--basic-black: #000000;
-	--dark-color: #09090b;
+	--dark-color: #0c0a09;
+	--grey-color: #a3a3a3;
+	--error-color: #ff0000;
+	--error-bg-color: hsl(0, 100%, 97%);
 	--button-bg-color: var(--dark-color);
 	--button-bg-hover-color: #222222;
 	--main-font-size: 1rem;
-	--game-font-size: 4rem;
+	--game-font-size: 5rem;
+	--cell-bg: var(--simply-white);
+	--cell-border: var(--basic-black);
+	--cell-text: var(--basic-black);
+	/* Light theme */
+	--modal-bg: var(--simply-white);
+	--modal-text: var(--basic-black);
+	--modal-overlay: rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] {
+	--dark-color: #0c0a09;
+	--simply-white: #ffffff;
+	--body-bg-color: var(--dark-color);
+	--button-bg-hover-color: #f0f0f0;
+	--bg-color: var(--dark-color);
+	--text-color: var(--simply-white);
+	--placeholder-color: var(--grey-color);
+	--button-color: var(--dark-color);
+	--button-bg-color: var(--simply-white);
+	--body-bg-color: var(--dark-color);
+	--modal-bg: var(--dark-color);
+	--modal-text: var(--simply-white);
+	--modal-overlay: rgba(20, 20, 20, 0.7);
+	--border-color: var(--simply-white);
+	--cell-bg: var(--dark-color);
+	--cell-border: var(--simply-white);
+	--cell-text: var(--simply-white);
+}
+
+[data-theme="light"] {
+	--dark-color: #09090b;
+	--border-color: var(--basic-black);
+	--bg-color: var(--simply-white);
+	--text-color: var(--dark-color);
+	--placeholder-color: var(--grey-color);
+	--button-color: var(--simply-white);
+	--button-bg-color: var(--basic-black);
+	--body-bg-color: var(--simply-white);
 }
 
 * {
@@ -24,7 +66,7 @@ body {
 	font-weight: 400;
 	font-size: var(--main-font-size);
 	line-height: 1.5;
-	color: var(--dark-color);
+	color: var(--text-color);
 	background-color: var(--body-bg-color);
 }
 
@@ -36,12 +78,12 @@ h5,
 h6 {
 	font-family: var(--body-font);
 	font-weight: 500;
-	color: var(--dark-color);
+	color: var(--text-color);
 	line-height: 1.75rem;
 }
 
 h1 {
-	font-size: 2rem;
+	font-size: 2.5rem;
 }
 
 h2 {
@@ -55,7 +97,7 @@ button {
 	padding: 12px 20px;
 	border: 0;
 	border-radius: 5px;
-	color: var(--simply-white);
+	color: var(--button-color);
 	background-color: var(--button-bg-color);
 }
 
@@ -63,8 +105,17 @@ button:hover {
 	background-color: var(--button-bg-hover-color);
 }
 
+::placeholder {
+	color: var(--placeholder-color);
+}
+
 .container {
-	padding: 2rem 3rem;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 2rem;
 }
 
 main > h1 {
@@ -76,27 +127,64 @@ main > h1 {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center;
 	gap: 1rem;
 }
 
 #gameboard {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
-	border: 1px solid var(--basic-black);
+	border: 1px solid var(--border-color);
 }
 
 .cell {
 	cursor: pointer;
 	width: 120px;
 	height: 120px;
-	border: 1px solid var(--basic-black);
-	background-color: var(--simply-white);
+	border: 1px solid var(--cell-border);
+	background-color: var(--cell-bg);
+	color: var(--cell-text);
 	box-sizing: border-box;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	font-size: var(--game-font-size);
+	font-weight: 600;
+	line-height: 1;
+	transition: background-color 0.2s ease;
+}
+
+.cell:hover {
+	background-color: rgba(128, 128, 128, 0.1);
+}
+
+.cell-fade {
+	animation: fadeMove 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes fadeMove {
+	0% {
+		opacity: 0;
+		transform: scale(0.2) rotate(-45deg);
+	}
+	70% {
+		transform: scale(1.1) rotate(5deg);
+	}
+	100% {
+		opacity: 1;
+		transform: scale(1) rotate(0);
+	}
+}
+
+.error-message {
+	color: var(--error-color);
+	font-size: 0.9rem;
+	margin-top: 1rem;
+	text-align: center;
+	display: none;
+	background-color: var(--error-bg-color);
+	border: 2px solid var(--error-color);
+	border-radius: 5px;
+	padding: 0.5rem;
 }
 
 #message-display {
@@ -104,7 +192,7 @@ main > h1 {
 	font-size: 1.2rem;
 	font-weight: 400;
 	text-align: center;
-	color: var(--dark-color);
+	color: var(--text-color);
 }
 
 #player-dashboard {
@@ -137,32 +225,90 @@ main > h1 {
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background-color: rgba(0, 0, 0, 0.5);
+	background-color: var(--modal-overlay);
 	z-index: 1000;
 }
 
 .modal-content {
-	background-color: var(--simply-white);
+	background-color: var(--modal-bg);
 	padding: 2rem;
 	border-radius: 5px;
 	box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
 	width: 90%;
 	max-width: 400px;
 	text-align: center;
+	color: var(--modal-text);
 }
 
 input {
 	display: block;
 	width: 100%;
-	padding: 0.5rem;
+	padding: 0.5rem 0.75rem;
 	margin: 1rem 0;
-	border: 1px solid var(--dark-color);
 	border-radius: 5px;
 	font-size: 1rem;
 }
 
+input:focus-visible {
+	outline: 0;
+	background-color: inherit;
+}
+
+input.invalid {
+	border-color: var(--error-color);
+	background-color: rgba(255, 0, 0, 0.1);
+}
+
+.modal-content input {
+	background-color: var(--modal-bg);
+	color: var(--modal-text);
+	border: 1px solid var(--text-color);
+}
+
+.modal-content button {
+	background-color: var(--button-bg-color);
+	color: var(--button-color);
+}
+
 #start-game {
 	margin-top: 1rem;
+}
+
+#start-game:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+#theme-toggle {
+	position: fixed;
+	top: 1rem;
+	right: 1rem;
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 0.5rem;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#theme-toggle:hover {
+	background-color: rgba(128, 128, 128, 0.2);
+}
+
+#theme-toggle .material-icons {
+	font-size: 24px;
+	color: var(--text-color);
+	transition: transform 0.3s ease;
+}
+
+#theme-toggle:hover .material-icons {
+	transform: rotate(360deg);
+}
+
+[data-theme="dark"] #theme-toggle .material-icons {
+	content: "light_mode";
 }
 
 /* Responsive design for smaller screens */
@@ -170,6 +316,7 @@ input {
 	.cell {
 		width: 100px;
 		height: 100px;
+		font-size: 4rem;
 	}
 
 	#player-dashboard {
@@ -181,5 +328,6 @@ input {
 	.cell {
 		width: 80px;
 		height: 80px;
+		font-size: 3.75rem;
 	}
 }

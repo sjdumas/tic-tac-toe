@@ -140,7 +140,14 @@ const DisplayController = (() => {
 		const board = Gameboard.getBoard();
 		const cells = document.querySelectorAll(".cell");
 		cells.forEach((cell, index) => {
-			cell.textContent = board[index] || "";
+			const newValue = board[index] || "";
+			if (cell.textContent !== newValue) {
+				cell.textContent = newValue;
+				cell.classList.add("cell-fade");
+				setTimeout(() => {
+					cell.classList.remove("cell-fade");
+				}, 300);
+			}
 		});
 	};
 
@@ -219,11 +226,87 @@ document.getElementById("start-game").addEventListener("click", () => {
 document.getElementById("restart").addEventListener("click", () => {
 	GameController.resetGame();
 	DisplayController.renderBoard();
-	updateMessage(
-		`${player1.name} is Player 1. Take your turn.`
-	);
+	updateMessage(`${player1.name} is Player 1. Take your turn.`);
 });
 
 DisplayController.renderBoard();
 DisplayController.setupListeners();
-updateMessage(`Game has started. ${player1.name} is Player 1. Take your turn.`);
+updateMessage(`Game has started. ${player1.name}, take your turn.`);
+
+const ThemeController = (() => {
+	const toggleIcon = () => {
+		const icon = document.querySelector("#theme-toggle .material-icons");
+		const currentTheme = document.body.dataset.theme;
+
+		icon.textContent =
+			currentTheme === "light" ? "dark_mode" : "light_mode";
+	};
+
+	const toggleTheme = () => {
+		const currentTheme = document.body.dataset.theme;
+		const newTheme = currentTheme === "light" ? "dark" : "light";
+
+		document.body.dataset.theme = newTheme;
+		localStorage.setItem("theme", newTheme);
+		toggleIcon();
+	};
+
+	const initializeTheme = () => {
+		const savedTheme = localStorage.getItem("theme") || "dark";
+
+		document.body.dataset.theme = savedTheme;
+		toggleIcon();
+	};
+
+	return { toggleTheme, initializeTheme };
+})();
+
+const FormValidator = (() => {
+	const isValidName = (name) => {
+		return /^[A-Za-z\s]*$/.test(name);
+	};
+
+	const validateInputs = (event) => {
+		const input = event.target;
+		const errorMessage = document.getElementById("validation-error");
+		const startButton = document.getElementById("start-game");
+
+		if (!isValidName(input.value)) {
+			errorMessage.textContent =
+				"Please use only letters and spaces for names";
+			errorMessage.style.display = "block";
+			input.classList.add("invalid");
+			startButton.disabled = true;
+		} else {
+			errorMessage.style.display = "none";
+			input.classList.remove("invalid");
+
+			// Check if both inputs are valid
+			const player1Input = document.getElementById("player1-input");
+			const player2Input = document.getElementById("player2-input");
+			const bothValid =
+				isValidName(player1Input.value) &&
+				isValidName(player2Input.value);
+			startButton.disabled = !bothValid;
+		}
+	};
+
+	return { validateInputs };
+})();
+
+document
+	.getElementById("player1-input")
+	.addEventListener("keyup", FormValidator.validateInputs);
+document
+	.getElementById("player2-input")
+	.addEventListener("keyup", FormValidator.validateInputs);
+
+document.addEventListener("DOMContentLoaded", () => {
+	ThemeController.initializeTheme();
+
+	const themeToggleBtn = document.getElementById("theme-toggle");
+
+	if (themeToggleBtn) {
+		themeToggleBtn.addEventListener("click", ThemeController.toggleTheme);
+	}
+});
